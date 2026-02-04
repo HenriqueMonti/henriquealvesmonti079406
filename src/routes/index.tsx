@@ -1,11 +1,11 @@
 import { lazy, Suspense, type JSX } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Layout } from '../shared/components/Layout';
-import { HomePage } from '../features/home/HomePage';
-import { Loading } from '../shared/components/Loading';
+import { Layout } from '@/shared/components/Layout';
+import { HomePage } from '@/features/home/HomePage';
+import { Loading } from '@/shared/components/Loading';
 
-const PetsPage = lazy(() => import('../features/pets/PetsPage').then(module => ({ default: module.PetsPage })));
-const TutoresPage = lazy(() => import('../features/tutores/TutoresPage').then(module => ({ default: module.TutoresPage })));
+const PetsPage = lazy(() => import('@/features/pets/PetsPage').then(module => ({ default: module.PetsPage })));
+const TutoresPage = lazy(() => import('@/features/tutores/TutoresPage').then(module => ({ default: module.TutoresPage })));
 
 const withSuspense = (element: JSX.Element) => (
   <Suspense fallback={<Loading />}>{element}</Suspense>

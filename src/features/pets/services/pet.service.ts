@@ -1,11 +1,11 @@
-import { HttpService } from '../../../core/http/http.service';
+import { HttpService } from '@/core/http/http.service';
 import type {
   PetRequestDto,
   PetResponseDto,
   PetResponseCompletoDto,
   PagedPetResponseDto,
   AnexoResponseDto,
-} from '../../../shared/types/dtos';
+} from '@/shared/types/dtos';
 
 class PetService extends HttpService {
   /**

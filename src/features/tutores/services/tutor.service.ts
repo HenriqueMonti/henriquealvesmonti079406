@@ -1,11 +1,11 @@
-import { HttpService } from '../../../core/http/http.service';
+import { HttpService } from '@/core/http/http.service';
 import type {
   ProprietarioRequestDto,
   ProprietarioResponseDto,
   ProprietarioResponseComPetsDto,
   PagedProprietarioResponseDto,
   AnexoResponseDto,
-} from '../../../shared/types/dtos';
+} from '@/shared/types/dtos';
 
 class TutorService extends HttpService {
   /**
