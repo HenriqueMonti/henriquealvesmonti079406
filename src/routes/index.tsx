@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from '@/shared/components/Layout';
 import { HomePage } from '@/features/home/HomePage';
 import { Loading } from '@/shared/components/Loading';
+import { RouteErrorPage } from '@/shared/pages/RouteErrorPage';
 
 const PetsPage = lazy(() => import('@/features/pets/PetsPage').then(module => ({ default: module.PetsPage })));
 const TutoresPage = lazy(() => import('@/features/tutores/TutoresPage').then(module => ({ default: module.TutoresPage })));
@@ -15,10 +16,11 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'pets', element: withSuspense(<PetsPage />) },
-      { path: 'tutores', element: withSuspense(<TutoresPage />) },
+      { path: 'pets', element: withSuspense(<PetsPage />), errorElement: <RouteErrorPage /> },
+      { path: 'tutores', element: withSuspense(<TutoresPage />), errorElement: <RouteErrorPage /> },
     ],
   },
 ]);
