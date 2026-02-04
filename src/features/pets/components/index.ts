@@ -1,4 +1,5 @@
 export { PetCard } from './PetCard';
+export { PetDetail } from './PetDetail';
 export { PetsList } from './PetsList';
 export { Pagination } from './Pagination';
 export { SearchBar } from './SearchBar';
