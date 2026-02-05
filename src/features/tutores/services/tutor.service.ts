@@ -6,7 +6,6 @@ import type {
   PagedProprietarioResponseDto,
   AnexoResponseDto,
 } from '@/shared/types/dtos';
-import { mockGetTutorById } from '@/core/http/mock-api';
 
 class TutorService extends HttpService {
   async getTutores(page: number = 1, size: number = 10): Promise<PagedProprietarioResponseDto> {
@@ -15,10 +14,8 @@ class TutorService extends HttpService {
     });
   }
 
-  // TODO: Remover mock após implementar autenticação real
   async getTutorById(id: number): Promise<ProprietarioResponseDto> {
-    //return this.get<ProprietarioResponseComPetsDto>(`/v1/tutores/${id}`);
-    return mockGetTutorById(id);
+    return this.get<ProprietarioResponseDto>(`/v1/tutores/${id}`);
   }
 
   async createTutor(data: ProprietarioRequestDto): Promise<ProprietarioResponseDto> {

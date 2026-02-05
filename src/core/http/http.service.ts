@@ -99,7 +99,7 @@ export abstract class HttpService {
   ): Promise<T> {
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('foto', file);
 
       // Adicionar dados adicionais se fornecidos
       if (additionalData) {

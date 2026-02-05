@@ -1,7 +1,9 @@
 import { lazy, Suspense, type JSX } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from '@/shared/components/Layout';
+import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
 import { HomePage } from '@/features/home/HomePage';
+import { LoginPage } from '@/features/auth/LoginPage';
 import { Loading } from '@/shared/components/Loading';
 import { RouteErrorPage } from '@/shared/pages/RouteErrorPage';
 import { PetDetailsPage } from '@/features/pets/PetDetailsPage';
@@ -16,18 +18,19 @@ const withSuspense = (element: JSX.Element) => (
 );
 
 const router = createBrowserRouter([
+  { path: '/login', element: <LoginPage />, errorElement: <RouteErrorPage /> },
   {
     path: '/',
     element: <Layout />,
     errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'pets', element: withSuspense(<PetsPage />), errorElement: <RouteErrorPage /> },
-      { path: 'pets/new', element: <PetFormPage />, errorElement: <RouteErrorPage /> },
-      { path: 'pets/:id', element: <PetDetailsPage />, errorElement: <RouteErrorPage /> },
-      { path: 'pets/:id/edit', element: <PetFormPage />, errorElement: <RouteErrorPage /> },
-      { path: 'tutores', element: withSuspense(<TutoresPage />), errorElement: <RouteErrorPage /> },
-      { path: 'tutores/:id', element: <TutoresDetailsPage />, errorElement: <RouteErrorPage /> },
+      { path: 'pets', element: <ProtectedRoute element={withSuspense(<PetsPage />)} />, errorElement: <RouteErrorPage /> },
+      { path: 'pets/new', element: <ProtectedRoute element={<PetFormPage />} />, errorElement: <RouteErrorPage /> },
+      { path: 'pets/:id', element: <ProtectedRoute element={<PetDetailsPage />} />, errorElement: <RouteErrorPage /> },
+      { path: 'pets/:id/edit', element: <ProtectedRoute element={<PetFormPage />} />, errorElement: <RouteErrorPage /> },
+      { path: 'tutores', element: <ProtectedRoute element={withSuspense(<TutoresPage />)} />, errorElement: <RouteErrorPage /> },
+      { path: 'tutores/:id', element: <ProtectedRoute element={<TutoresDetailsPage />} />, errorElement: <RouteErrorPage /> },
     ],
   },
 ]);
