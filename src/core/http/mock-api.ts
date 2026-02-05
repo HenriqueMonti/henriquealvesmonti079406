@@ -4,7 +4,39 @@
  * Para ser removido quando autenticação real for implementada
  */
 
-import type { PagedPetResponseDto, PetResponseCompletoDto, PetResponseDto } from '@/shared/types/dtos';
+import type {
+  PagedPetResponseDto,
+  PetResponseCompletoDto,
+  PetResponseDto,
+  ProprietarioResponseDto,
+} from '@/shared/types/dtos';
+
+const MOCK_TUTORES: ProprietarioResponseDto[] = [
+  {
+    id: 1,
+    nome: 'João Silva',
+    email: 'joao@example.com',
+    telefone: '(11) 98765-4321',
+    endereco: 'Rua A, 123 - São Paulo, SP',
+    cpf: 12345678901,
+  },
+  {
+    id: 2,
+    nome: 'Maria Santos',
+    email: 'maria@example.com',
+    telefone: '(21) 99876-5432',
+    endereco: 'Avenida B, 456 - Rio de Janeiro, RJ',
+    cpf: 98765432101,
+  },
+  {
+    id: 3,
+    nome: 'Carlos Oliveira',
+    email: 'carlos@example.com',
+    telefone: '(31) 97654-3210',
+    endereco: 'Rua C, 789 - Belo Horizonte, MG',
+    cpf: 55555555555,
+  },
+];
 
 const MOCK_PETS: PetResponseDto[] = [
   {
@@ -151,7 +183,7 @@ export async function mockGetPets(
 
 /**
  * Mock de GET /v1/pets/{id}
- * Retorna detalhes completos do pet
+ * Retorna detalhes completos do pet com tutores
  */
 export async function mockGetPetById(id: number): Promise<PetResponseCompletoDto> {
   // Simula delay de rede
@@ -162,10 +194,47 @@ export async function mockGetPetById(id: number): Promise<PetResponseCompletoDto
     throw new Error(`Pet com ID ${id} não encontrado`);
   }
 
+  // Atribui tutores baseado no ID (alguns pets têm, outros não)
+  const tutorIds = {
+    1: [1],
+    2: [2],
+    3: [1, 2],
+    4: [3],
+    5: [],
+    6: [1],
+    7: [2],
+    8: [],
+    9: [3],
+    10: [1, 2],
+    11: [],
+    12: [2],
+  };
+
+  const petTutorIds = tutorIds[id as keyof typeof tutorIds] || [];
+  const tutores = petTutorIds.map((tutorId) =>
+    MOCK_TUTORES.find((t) => t.id === tutorId)
+  ).filter((t) => t !== undefined) as ProprietarioResponseDto[];
+
   return {
     ...pet,
-    tutores: [],
+    tutores,
   };
+}
+
+/**
+ * Mock de GET /v1/tutores/{id}
+ * Retorna detalhes do tutor
+ */
+export async function mockGetTutorById(id: number): Promise<ProprietarioResponseDto> {
+  // Simula delay de rede
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const tutor = MOCK_TUTORES.find((t) => t.id === id);
+  if (!tutor) {
+    throw new Error(`Tutor com ID ${id} não encontrado`);
+  }
+
+  return tutor;
 }
 
 /**

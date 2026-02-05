@@ -76,6 +76,10 @@ export function PetDetailsPage() {
     navigate('/pets');
   };
 
+  const handleViewTutor = (tutorId: number) => {
+    navigate(`/tutores/${tutorId}`);
+  };
+
   const handleDismissError = () => {
     petsFacade.clearError();
     setError(null);
@@ -91,7 +95,7 @@ export function PetDetailsPage() {
         {loading && !pet ? (
           <LoadingSpinner />
         ) : pet ? (
-          <PetDetail pet={pet} onBack={handleBack} />
+          <PetDetail pet={pet} onBack={handleBack} onViewTutor={handleViewTutor} />
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Pet não encontrado</p>

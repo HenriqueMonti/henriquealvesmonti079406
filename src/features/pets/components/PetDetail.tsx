@@ -4,13 +4,17 @@
  */
 
 import type { PetResponseCompletoDto } from '@/shared/types/dtos';
+import { TutorCard } from '@/shared/components/TutorCard';
 
 interface PetDetailProps {
   pet: PetResponseCompletoDto;
   onBack: () => void;
+  onViewTutor?: (tutorId: number) => void;
 }
 
-export function PetDetail({ pet, onBack }: PetDetailProps) {
+export function PetDetail({ pet, onBack, onViewTutor }: PetDetailProps) {
+  const hasTutores = pet.tutores && pet.tutores.length > 0;
+
   return (
     <div className="space-y-6">
       {/* Botão de voltar */}
@@ -69,30 +73,19 @@ export function PetDetail({ pet, onBack }: PetDetailProps) {
           </div>
 
           {/* Seção de Tutores */}
-          {pet.tutores && pet.tutores.length > 0 ? (
+          {hasTutores ? (
             <div className="bg-green-50 rounded-lg shadow p-6 border border-green-200">
               <h2 className="text-xl font-semibold text-green-900 mb-4">
-                Tutor(es) Responsável(is)
+                👥 Tutor(es) Responsável(is)
               </h2>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {pet.tutores.map((tutor) => (
-                  <div
+                  <TutorCard
                     key={tutor.id}
-                    className="bg-white rounded p-4 border border-green-100"
-                  >
-                    <p className="font-semibold text-gray-900">{tutor.nome}</p>
-                    {tutor.email && (
-                      <p className="text-sm text-gray-600">Email: {tutor.email}</p>
-                    )}
-                    {tutor.telefone && (
-                      <p className="text-sm text-gray-600">Tel: {tutor.telefone}</p>
-                    )}
-                    {tutor.endereco && (
-                      <p className="text-sm text-gray-600">
-                        Endereço: {tutor.endereco}
-                      </p>
-                    )}
-                  </div>
+                    tutor={tutor}
+                    onViewProfile={onViewTutor}
+                    showButton={!!onViewTutor}
+                  />
                 ))}
               </div>
             </div>
