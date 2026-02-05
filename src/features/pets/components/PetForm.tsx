@@ -102,6 +102,41 @@ export function PetForm({
     reader.readAsDataURL(file);
   };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const file = e.dataTransfer.files?.[0];
+
+    if (!file) return;
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      onError?.('Por favor, solte um arquivo de imagem válido');
+      return;
+    }
+
+    // Validar tamanho (máx 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      onError?.('A imagem não pode exceder 5MB');
+      return;
+    }
+
+    setPhotoFile(file);
+
+    // Preview da imagem
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPhotoPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -158,7 +193,11 @@ export function PetForm({
           )}
 
           {/* Input de upload */}
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
             <input
               type="file"
               accept="image/*"

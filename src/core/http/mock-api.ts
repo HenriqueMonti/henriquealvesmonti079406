@@ -5,6 +5,7 @@
  */
 
 import type {
+  AnexoResponseDto,
   PagedPetResponseDto,
   PetRequestDto,
   PetResponseCompletoDto,
@@ -313,4 +314,39 @@ export async function mockDeletePet(id: number): Promise<void> {
   }
 
   MOCK_PETS.splice(petIndex, 1);
+}
+
+/**
+ * Mock de POST /v1/pets/{id}/fotos
+ * Faz upload de uma foto para um pet
+ */
+export async function mockUploadPetPhoto(
+  petId: number,
+  file: File
+): Promise<AnexoResponseDto> {
+  // Simula delay de rede
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const pet = MOCK_PETS.find((p) => p.id === petId);
+  if (!pet) {
+    throw new Error(`Pet com ID ${petId} não encontrado`);
+  }
+
+  // Gera ID de foto e cria data URL a partir do arquivo
+  const fotoId = Math.max(...MOCK_PETS.map((p) => p.foto?.id ?? 0), 0) + 1;
+  
+  // Cria uma URL de blob para a imagem
+  const url = URL.createObjectURL(file);
+
+  const foto: AnexoResponseDto = {
+    id: fotoId,
+    nome: file.name,
+    contentType: file.type || 'image/jpeg',
+    url,
+  };
+
+  // Atualiza a foto do pet
+  pet.foto = foto;
+
+  return foto;
 }

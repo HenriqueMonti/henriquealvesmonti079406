@@ -6,7 +6,7 @@ import type {
   PagedPetResponseDto,
   AnexoResponseDto,
 } from '@/shared/types/dtos';
-import { mockGetPets, mockGetPetById, mockCreatePet, mockUpdatePet, mockDeletePet } from '@/core/http/mock-api';
+import { mockGetPets, mockGetPetById, mockCreatePet, mockUpdatePet, mockDeletePet, mockUploadPetPhoto } from '@/core/http/mock-api';
 
 class PetService extends HttpService {
 
@@ -42,8 +42,10 @@ class PetService extends HttpService {
     return mockDeletePet(id);
   }
 
+  // TODO: Remover mock após implementar autenticação real
   async uploadPetPhoto(petId: number, file: File): Promise<AnexoResponseDto> {
-    return this.uploadFile<AnexoResponseDto>(`/v1/pets/${petId}/fotos`, file);
+    //return this.uploadFile<AnexoResponseDto>(`/v1/pets/${petId}/fotos`, file);
+    return mockUploadPetPhoto(petId, file);
   }
 
   async deletePetPhoto(petId: number, fotoId: number): Promise<void> {
