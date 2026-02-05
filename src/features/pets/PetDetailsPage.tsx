@@ -80,6 +80,29 @@ export function PetDetailsPage() {
     navigate(`/tutores/${tutorId}`);
   };
 
+  const handleEdit = (petId: number) => {
+    navigate(`/pets/${petId}/edit`);
+  };
+
+  const handleDelete = (petId: number) => {
+    if (confirm('Tem certeza que deseja deletar este pet?')) {
+      setLoading(true);
+      setError(null);
+
+      petsFacade.deletePet(petId)
+        .then(() => {
+          petsFacade.reset();
+          navigate('/pets');
+        })
+        .catch((err) => {
+          setError(
+            err instanceof Error ? err.message : 'Erro ao deletar pet'
+          );
+          setLoading(false);
+        });
+    }
+  };
+
   const handleDismissError = () => {
     petsFacade.clearError();
     setError(null);
@@ -95,7 +118,13 @@ export function PetDetailsPage() {
         {loading && !pet ? (
           <LoadingSpinner />
         ) : pet ? (
-          <PetDetail pet={pet} onBack={handleBack} onViewTutor={handleViewTutor} />
+          <PetDetail
+            pet={pet}
+            onBack={handleBack}
+            onViewTutor={handleViewTutor}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Pet não encontrado</p>

@@ -6,6 +6,7 @@
 
 import type {
   PagedPetResponseDto,
+  PetRequestDto,
   PetResponseCompletoDto,
   PetResponseDto,
   ProprietarioResponseDto,
@@ -244,4 +245,72 @@ export function enableMockApi() {
   // Set token padrão para bypass de autenticação
   localStorage.setItem('@pet-app:access_token', 'mock-token-12345');
   console.log('✓ Mock API habilitado. Token padrão setado.');
+}
+
+/**
+ * Mock de POST /v1/pets
+ * Cria um novo pet
+ */
+export async function mockCreatePet(data: PetRequestDto): Promise<PetResponseDto> {
+  // Simula delay de rede
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // Gera novo ID (próximo disponível)
+  const maxId = Math.max(...MOCK_PETS.map((p) => p.id), 0);
+  const newId = maxId + 1;
+
+  // Cria novo pet
+  const newPet: PetResponseDto = {
+    id: newId,
+    nome: data.nome,
+    raca: data.raca,
+    idade: data.idade,
+    // Sem foto inicial
+  };
+
+  MOCK_PETS.push(newPet);
+
+  return newPet;
+}
+
+/**
+ * Mock de PUT /v1/pets/{id}
+ * Atualiza um pet existente
+ */
+export async function mockUpdatePet(id: number, data: PetRequestDto): Promise<PetResponseDto> {
+  // Simula delay de rede
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const petIndex = MOCK_PETS.findIndex((p) => p.id === id);
+  if (petIndex === -1) {
+    throw new Error(`Pet com ID ${id} não encontrado`);
+  }
+
+  // Atualiza pet
+  const updatedPet = {
+    ...MOCK_PETS[petIndex],
+    nome: data.nome,
+    raca: data.raca,
+    idade: data.idade,
+  };
+
+  MOCK_PETS[petIndex] = updatedPet;
+
+  return updatedPet;
+}
+
+/**
+ * Mock de DELETE /v1/pets/{id}
+ * Deleta um pet
+ */
+export async function mockDeletePet(id: number): Promise<void> {
+  // Simula delay de rede
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const petIndex = MOCK_PETS.findIndex((p) => p.id === id);
+  if (petIndex === -1) {
+    throw new Error(`Pet com ID ${id} não encontrado`);
+  }
+
+  MOCK_PETS.splice(petIndex, 1);
 }

@@ -5,6 +5,7 @@ import { HomePage } from '@/features/home/HomePage';
 import { Loading } from '@/shared/components/Loading';
 import { RouteErrorPage } from '@/shared/pages/RouteErrorPage';
 import { PetDetailsPage } from '@/features/pets/PetDetailsPage';
+import { PetFormPage } from '@/features/pets/PetFormPage';
 import { TutoresDetailsPage } from '@/features/tutores/TutoresDetailsPage';
 
 const PetsPage = lazy(() => import('@/features/pets/PetsPage').then(module => ({ default: module.PetsPage })));
@@ -22,7 +23,9 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'pets', element: withSuspense(<PetsPage />), errorElement: <RouteErrorPage /> },
+      { path: 'pets/new', element: <PetFormPage />, errorElement: <RouteErrorPage /> },
       { path: 'pets/:id', element: <PetDetailsPage />, errorElement: <RouteErrorPage /> },
+      { path: 'pets/:id/edit', element: <PetFormPage />, errorElement: <RouteErrorPage /> },
       { path: 'tutores', element: withSuspense(<TutoresPage />), errorElement: <RouteErrorPage /> },
       { path: 'tutores/:id', element: <TutoresDetailsPage />, errorElement: <RouteErrorPage /> },
     ],

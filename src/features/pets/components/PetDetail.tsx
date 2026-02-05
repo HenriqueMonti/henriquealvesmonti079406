@@ -10,9 +10,11 @@ interface PetDetailProps {
   pet: PetResponseCompletoDto;
   onBack: () => void;
   onViewTutor?: (tutorId: number) => void;
+  onEdit?: (petId: number) => void;
+  onDelete?: (petId: number) => void;
 }
 
-export function PetDetail({ pet, onBack, onViewTutor }: PetDetailProps) {
+export function PetDetail({ pet, onBack, onViewTutor, onEdit, onDelete }: PetDetailProps) {
   const hasTutores = pet.tutores && pet.tutores.length > 0;
 
   return (
@@ -99,10 +101,16 @@ export function PetDetail({ pet, onBack, onViewTutor }: PetDetailProps) {
 
           {/* Botões de ação */}
           <div className="flex gap-3 pt-4">
-            <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded transition-colors">
+            <button
+              onClick={() => onEdit?.(pet.id)}
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded transition-colors"
+            >
               ✏️ Editar Pet
             </button>
-            <button className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded transition-colors">
+            <button
+              onClick={() => onDelete?.(pet.id)}
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded transition-colors"
+            >
               🗑️ Deletar Pet
             </button>
           </div>

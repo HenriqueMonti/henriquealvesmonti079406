@@ -28,10 +28,20 @@ export function PetsPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Nossos Pets</h1>
-          <p className="text-gray-600">
-            Conheça todos os pets disponíveis para adoção
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Nossos Pets</h1>
+              <p className="text-gray-600">
+                Conheça todos os pets disponíveis para adoção
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/pets/new')}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded transition-colors"
+            >
+              ➕ Novo Pet
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
