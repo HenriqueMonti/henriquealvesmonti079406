@@ -12,9 +12,11 @@ interface PetDetailProps {
   onViewTutor?: (tutorId: number) => void;
   onEdit?: (petId: number) => void;
   onDelete?: (petId: number) => void;
+  onLinkTutor?: (tutorId: number) => void;
+  onUnlinkTutor?: (tutorId: number) => void;
 }
 
-export function PetDetail({ pet, onBack, onViewTutor, onEdit, onDelete }: PetDetailProps) {
+export function PetDetail({ pet, onBack, onViewTutor, onEdit, onDelete, onLinkTutor, onUnlinkTutor }: PetDetailProps) {
   const hasTutores = pet.tutores && pet.tutores.length > 0;
 
   return (
@@ -77,25 +79,50 @@ export function PetDetail({ pet, onBack, onViewTutor, onEdit, onDelete }: PetDet
           {/* Seção de Tutores */}
           {hasTutores ? (
             <div className="bg-green-50 rounded-lg shadow p-6 border border-green-200">
-              <h2 className="text-xl font-semibold text-green-900 mb-4">
-                👥 Tutor(es) Responsável(is)
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-green-900">
+                  👥 Tutor(es) Responsável(is)
+                </h2>
+                <button
+                  onClick={() => onLinkTutor?.(pet.id)}
+                  className="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-1 px-3 rounded transition-colors"
+                >
+                  ➕ Adicionar
+                </button>
+              </div>
               <div className="space-y-4">
                 {pet.tutores.map((tutor) => (
-                  <TutorCard
-                    key={tutor.id}
-                    tutor={tutor}
-                    onViewProfile={onViewTutor}
-                    showButton={!!onViewTutor}
-                  />
+                  <div key={tutor.id} className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <TutorCard
+                        tutor={tutor}
+                        onViewProfile={onViewTutor}
+                        showButton={!!onViewTutor}
+                      />
+                    </div>
+                    <button
+                      onClick={() => onUnlinkTutor?.(tutor.id)}
+                      className="mt-2 text-red-600 hover:text-red-800 text-sm font-semibold whitespace-nowrap"
+                    >
+                      ❌ Remover
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
           ) : (
             <div className="bg-yellow-50 rounded-lg shadow p-6 border border-yellow-200">
-              <p className="text-yellow-900">
-                ℹ️ Este pet ainda não tem tutor cadastrado.
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-yellow-900">
+                  ℹ️ Este pet ainda não tem tutor cadastrado.
+                </p>
+                <button
+                  onClick={() => onLinkTutor?.(pet.id)}
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-semibold py-1 px-3 rounded transition-colors"
+                >
+                  ➕ Adicionar Tutor
+                </button>
+              </div>
             </div>
           )}
 

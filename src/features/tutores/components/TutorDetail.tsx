@@ -10,9 +10,11 @@ interface TutorDetailProps {
   onBack: () => void;
   onEdit?: (tutorId: number) => void;
   onDelete?: (tutorId: number) => void;
+  onLinkPet?: (tutorId: number) => void;
+  onUnlinkPet?: (petId: number) => void;
 }
 
-export function TutorDetail({ tutor, onBack, onEdit, onDelete }: TutorDetailProps) {
+export function TutorDetail({ tutor, onBack, onEdit, onDelete, onLinkPet, onUnlinkPet }: TutorDetailProps) {
   return (
     <div className="space-y-6">
       {/* Botão de voltar */}
@@ -100,9 +102,17 @@ export function TutorDetail({ tutor, onBack, onEdit, onDelete }: TutorDetailProp
 
           {/* Seção de Pets (vazia por enquanto) */}
           <div className="bg-blue-50 rounded-lg shadow p-6 border border-blue-200">
-            <h2 className="text-lg font-semibold text-blue-900 mb-4">
-              🐾 Pets Vinculados
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-blue-900">
+                🐾 Pets Vinculados
+              </h2>
+              <button
+                onClick={() => onLinkPet?.(tutor.id)}
+                className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-1 px-3 rounded transition-colors"
+              >
+                ➕ Vincular Pet
+              </button>
+            </div>
             <p className="text-blue-700">
               Pets do tutor serão exibidos aqui em breve.
             </p>

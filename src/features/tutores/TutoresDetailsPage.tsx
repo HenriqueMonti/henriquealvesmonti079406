@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { ProprietarioResponseDto } from '@/shared/types/dtos';
 import { tutoresFacade } from '@/features/tutores/facades';
+import { petsFacade } from '@/features/pets/facades';
 import { TutorDetail } from './components/TutorDetail';
+import { LinkPetModal } from './components/LinkPetModal';
 import { LoadingSpinner } from '@/features/pets/components/LoadingSpinner';
 import { ErrorAlert } from '@/features/pets/components/ErrorAlert';
 
@@ -12,6 +14,7 @@ export function TutoresDetailsPage() {
   const [tutor, setTutor] = useState<ProprietarioResponseDto | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showLinkPetModal, setShowLinkPetModal] = useState(false);
 
   const tutorId = id ? parseInt(id, 10) : null;
 
@@ -99,6 +102,47 @@ export function TutoresDetailsPage() {
     setError(null);
   };
 
+  const handleLinkPet = (tutorId: number) => {
+    setShowLinkPetModal(true);
+  };
+
+  const handleLinkPetToSel = async (petId: number) => {
+    if (!tutorId) return;
+
+    try {
+      await petsFacade.linkPetToTutor(tutorId, petId);
+      // Recarrega os detalhes do tutor
+      await tutoresFacade.loadTutorById(tutorId);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Erro ao vincular pet'
+      );
+    }
+  };
+
+  const handleUnlinkPet = (petId: number) => {
+    if (!tutorId) return;
+
+    if (confirm('Tem certeza que deseja remover este pet do tutor?')) {
+      setLoading(true);
+      setError(null);
+
+      petsFacade.unlinkPetFromTutor(tutorId, petId)
+        .then(() => {
+          // Recarrega os detalhes do tutor
+          return tutoresFacade.loadTutorById(tutorId);
+        })
+        .catch((err) => {
+          setError(
+            err instanceof Error ? err.message : 'Erro ao remover pet'
+          );
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 py-8">
@@ -109,12 +153,26 @@ export function TutoresDetailsPage() {
         {loading && !tutor ? (
           <LoadingSpinner />
         ) : tutor ? (
-          <TutorDetail
-            tutor={tutor}
-            onBack={handleBack}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <>
+            <TutorDetail
+              tutor={tutor}
+              onBack={handleBack}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onLinkPet={handleLinkPet}
+              onUnlinkPet={handleUnlinkPet}
+            />
+
+            {/* Modal para vincular pet */}
+            {showLinkPetModal && tutorId && (
+              <LinkPetModal
+                tutorId={tutorId}
+                currentPetIds={[]}
+                onLink={handleLinkPetToSel}
+                onClose={() => setShowLinkPetModal(false)}
+              />
+            )}
+          </>
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Tutor não encontrado</p>

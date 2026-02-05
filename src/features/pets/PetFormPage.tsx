@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { PetRequestDto, PetResponseDto } from '@/shared/types/dtos';
+import type { PetRequestDto, PetResponseCompletoDto } from '@/shared/types/dtos';
 import { petsFacade } from '@/features/pets/facades';
 import { PetForm } from './components/PetForm';
 import { LoadingSpinner } from './components/LoadingSpinner';
@@ -13,7 +13,7 @@ import { LoadingSpinner } from './components/LoadingSpinner';
 export function PetFormPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [pet, setPet] = useState<PetResponseDto | null>(null);
+  const [pet, setPet] = useState<PetResponseCompletoDto | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

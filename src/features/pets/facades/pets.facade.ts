@@ -220,6 +220,44 @@ class PetsFacade {
   }
 
   /**
+   * Vincula pet a um tutor
+   */
+  async linkPetToTutor(tutorId: number, petId: number): Promise<boolean> {
+    this.updateState({ loading: true, error: null });
+
+    try {
+      await petService.linkPetToTutor(tutorId, petId);
+      // Recarrega detalhes do pet
+      await this.loadPetById(petId);
+      return true;
+    } catch (error) {
+      this.updateState({ error: error as ApiError });
+      return false;
+    } finally {
+      this.updateState({ loading: false });
+    }
+  }
+
+  /**
+   * Remove pet de um tutor
+   */
+  async unlinkPetFromTutor(tutorId: number, petId: number): Promise<boolean> {
+    this.updateState({ loading: true, error: null });
+
+    try {
+      await petService.unlinkPetFromTutor(tutorId, petId);
+      // Recarrega detalhes do pet
+      await this.loadPetById(petId);
+      return true;
+    } catch (error) {
+      this.updateState({ error: error as ApiError });
+      return false;
+    } finally {
+      this.updateState({ loading: false });
+    }
+  }
+
+  /**
    * Limpa apenas o erro
    */
   clearError(): void {

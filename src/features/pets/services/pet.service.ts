@@ -38,6 +38,14 @@ class PetService extends HttpService {
   async deletePetPhoto(petId: number, fotoId: number): Promise<void> {
     return this.delete(`/v1/pets/${petId}/fotos/${fotoId}`);
   }
+
+  async linkPetToTutor(tutorId: number, petId: number): Promise<void> {
+    return this.post(`/v1/pets/${petId}/tutores/${tutorId}`);
+  }
+
+  async unlinkPetFromTutor(tutorId: number, petId: number): Promise<void> {
+    return this.delete(`/v1/pets/${petId}/tutores/${tutorId}`);
+  }
 }
 
 export const petService = new PetService();
