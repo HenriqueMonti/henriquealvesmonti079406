@@ -8,9 +8,11 @@ import type { ProprietarioResponseDto } from '@/shared/types/dtos';
 interface TutorDetailProps {
   tutor: ProprietarioResponseDto;
   onBack: () => void;
+  onEdit?: (tutorId: number) => void;
+  onDelete?: (tutorId: number) => void;
 }
 
-export function TutorDetail({ tutor, onBack }: TutorDetailProps) {
+export function TutorDetail({ tutor, onBack, onEdit, onDelete }: TutorDetailProps) {
   return (
     <div className="space-y-6">
       {/* Botão de voltar */}
@@ -108,10 +110,16 @@ export function TutorDetail({ tutor, onBack }: TutorDetailProps) {
 
           {/* Botões de ação */}
           <div className="flex gap-3 pt-4">
-            <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded transition-colors">
+            <button
+              onClick={() => onEdit?.(tutor.id)}
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded transition-colors"
+            >
               ✏️ Editar Tutor
             </button>
-            <button className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded transition-colors">
+            <button
+              onClick={() => onDelete?.(tutor.id)}
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded transition-colors"
+            >
               🗑️ Deletar Tutor
             </button>
           </div>

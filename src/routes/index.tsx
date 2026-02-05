@@ -9,6 +9,7 @@ import { RouteErrorPage } from '@/shared/pages/RouteErrorPage';
 import { PetDetailsPage } from '@/features/pets/PetDetailsPage';
 import { PetFormPage } from '@/features/pets/PetFormPage';
 import { TutoresDetailsPage } from '@/features/tutores/TutoresDetailsPage';
+import { TutorFormPage } from '@/features/tutores/TutorFormPage';
 
 const PetsPage = lazy(() => import('@/features/pets/PetsPage').then(module => ({ default: module.PetsPage })));
 const TutoresPage = lazy(() => import('@/features/tutores/TutoresPage').then(module => ({ default: module.TutoresPage })));
@@ -30,7 +31,9 @@ const router = createBrowserRouter([
       { path: 'pets/:id', element: <ProtectedRoute element={<PetDetailsPage />} />, errorElement: <RouteErrorPage /> },
       { path: 'pets/:id/edit', element: <ProtectedRoute element={<PetFormPage />} />, errorElement: <RouteErrorPage /> },
       { path: 'tutores', element: <ProtectedRoute element={withSuspense(<TutoresPage />)} />, errorElement: <RouteErrorPage /> },
+      { path: 'tutores/new', element: <ProtectedRoute element={<TutorFormPage />} />, errorElement: <RouteErrorPage /> },
       { path: 'tutores/:id', element: <ProtectedRoute element={<TutoresDetailsPage />} />, errorElement: <RouteErrorPage /> },
+      { path: 'tutores/:id/edit', element: <ProtectedRoute element={<TutorFormPage />} />, errorElement: <RouteErrorPage /> },
     ],
   },
 ]);

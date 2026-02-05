@@ -1,12 +1,7 @@
-/**
- * TutoresDetailsPage
- * Página de detalhamento de um tutor específico
- */
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { ProprietarioResponseDto } from '@/shared/types/dtos';
-import { tutorService } from '@/features/tutores/services';
+import { tutoresFacade } from '@/features/tutores/facades';
 import { TutorDetail } from './components/TutorDetail';
 import { LoadingSpinner } from '@/features/pets/components/LoadingSpinner';
 import { ErrorAlert } from '@/features/pets/components/ErrorAlert';
@@ -32,8 +27,7 @@ export function TutoresDetailsPage() {
       setError(null);
 
       try {
-        const result = await tutorService.getTutorById(tutorId);
-        setTutor(result);
+        await tutoresFacade.loadTutorById(tutorId);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : 'Erro ao carregar detalhes do tutor'
@@ -46,11 +40,62 @@ export function TutoresDetailsPage() {
     loadTutorDetails();
   }, [tutorId]);
 
+  // Subscribe ao tutor selecionado
+  useEffect(() => {
+    const selectedTutorSub = tutoresFacade.selectedTutor$.subscribe((selectedTutor) => {
+      if (selectedTutor) {
+        setTutor(selectedTutor as ProprietarioResponseDto);
+      }
+    });
+
+    const errorSub = tutoresFacade.error$.subscribe((err) => {
+      if (err) {
+        const message = typeof err === 'string' ? err : (err instanceof Error ? err.message : 'Erro ao carregar tutor');
+        setError(message);
+      }
+    });
+
+    const loadingSub = tutoresFacade.loading$.subscribe((isLoading) => {
+      setLoading(Boolean(isLoading));
+    });
+
+    return () => {
+      selectedTutorSub.unsubscribe();
+      errorSub.unsubscribe();
+      loadingSub.unsubscribe();
+    };
+  }, []);
+
   const handleBack = () => {
+    tutoresFacade.reset();
     navigate('/tutores');
   };
 
+  const handleEdit = (tutorId: number) => {
+    navigate(`/tutores/${tutorId}/edit`);
+  };
+
+  const handleDelete = (tutorId: number) => {
+    if (confirm('Tem certeza que deseja deletar este tutor?')) {
+      setLoading(true);
+      setError(null);
+
+      tutoresFacade.deleteTutor(tutorId)
+        .then(() => {
+          tutoresFacade.reset();
+          navigate('/tutores');
+        })
+        .catch((err) => {
+          setError(
+            err instanceof Error ? err.message : 'Erro ao deletar tutor'
+          );
+          setLoading(false);
+        });
+    }
+  };
+
   const handleDismissError = () => {
+    tutoresFacade.clearError();
     setError(null);
   };
 
@@ -64,7 +109,12 @@ export function TutoresDetailsPage() {
         {loading && !tutor ? (
           <LoadingSpinner />
         ) : tutor ? (
-          <TutorDetail tutor={tutor} onBack={handleBack} />
+          <TutorDetail
+            tutor={tutor}
+            onBack={handleBack}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Tutor não encontrado</p>
