@@ -13,9 +13,10 @@ import { ErrorAlert } from './ErrorAlert';
 
 interface PetsListProps {
   onSelectPet: (petId: number) => void;
+  searchQuery?: string;
 }
 
-export function PetsList({ onSelectPet }: PetsListProps) {
+export function PetsList({ onSelectPet, searchQuery = '' }: PetsListProps) {
   const [pets, setPets] = useState<PetResponseDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,6 +24,16 @@ export function PetsList({ onSelectPet }: PetsListProps) {
   const [totalPages, setTotalPages] = useState(1);
 
   const pageSize = 10;
+
+  // Filtra pets localmente baseado na query
+  const filteredPets = pets.filter((pet) =>
+    pet.nome.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Reseta para página 1 quando a busca muda
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   // Carrega pets quando página muda
   useEffect(() => {
@@ -98,10 +109,10 @@ export function PetsList({ onSelectPet }: PetsListProps) {
       ) : (
         <>
           {/* Grid de cards */}
-          {pets.length > 0 ? (
+          {filteredPets.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {pets.map((pet) => (
+                {filteredPets.map((pet) => (
                   <PetCard
                     key={pet.id}
                     pet={pet}
@@ -120,7 +131,9 @@ export function PetsList({ onSelectPet }: PetsListProps) {
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">Nenhum pet encontrado</p>
+              <p className="text-gray-500 text-lg">
+                {searchQuery ? `Nenhum pet encontrado com o nome "${searchQuery}"` : 'Nenhum pet encontrado'}
+              </p>
             </div>
           )}
         </>

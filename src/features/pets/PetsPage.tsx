@@ -8,19 +8,20 @@
  * - Busca por nome
  */
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PetsList, SearchBar } from './components';
 
 export function PetsPage() {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelectPet = (petId: number) => {
     navigate(`/pets/${petId}`);
   };
 
   const handleSearch = (query: string) => {
-    // TODO: Implementar busca local ou via API
-    console.log('Buscar por:', query);
+    setSearchQuery(query);
   };
 
   return (
@@ -48,7 +49,7 @@ export function PetsPage() {
         <SearchBar onSearch={handleSearch} />
 
         {/* Pets List com paginação */}
-        <PetsList onSelectPet={handleSelectPet} />
+        <PetsList onSelectPet={handleSelectPet} searchQuery={searchQuery} />
       </div>
     </div>
   );
